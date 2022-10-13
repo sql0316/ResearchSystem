@@ -1,0 +1,99 @@
+UseCaseModel ATM {
+
+	UC::withdrawCash definedBySSD(WithdrawCashSSD) relatedService(WithdrawCashService)
+
+	Actor Cashier("Senior Cashier") {
+		withdrawCash
+	}
+
+	Actor Actor2 {
+	}
+
+	Interaction WithdrawCashSSD {
+
+		[Participants: Cashier WithdrawCashService]
+
+		CallMessage::WithdrawCashSSDCallMessage1(inputCard WithdrawCashSSDCallMessage1SendingEnd -> WithdrawCashSSDExecution1StartEnd)
+		ReturnMessage::WithdrawCashSSDCallMessage1Return(WithdrawCashSSDExecution1FinishEnd -> WithdrawCashSSDCallMessage1ReturnReceivingEnd WithdrawCashSSDCallMessage1)
+		CallMessage::WithdrawCashSSDCallMessage3(inputPassword WithdrawCashSSDCallMessage3SendingEnd -> WithdrawCashSSDExecution2StartEnd)
+		ReturnMessage::WithdrawCashSSDCallMessage3Return(WithdrawCashSSDExecution2FinishEnd -> WithdrawCashSSDCallMessage3ReturnReceivingEnd WithdrawCashSSDCallMessage3)
+		CallMessage::WithdrawCashSSDCallMessage5(withDraw WithdrawCashSSDCallMessage5SendingEnd -> WithdrawCashSSDExecution3StartEnd)
+		ReturnMessage::WithdrawCashSSDCallMessage5Return(WithdrawCashSSDExecution3FinishEnd -> WithdrawCashSSDCallMessage5ReturnReceivingEnd WithdrawCashSSDCallMessage5)
+		CallMessage::WithdrawCashSSDCallMessage7(printReceipt WithdrawCashSSDCallMessage7SendingEnd -> WithdrawCashSSDExecution4StartEnd)
+		ReturnMessage::WithdrawCashSSDCallMessage7Return(WithdrawCashSSDExecution4FinishEnd -> WithdrawCashSSDCallMessage7ReturnReceivingEnd WithdrawCashSSDCallMessage7)
+		CallMessage::WithdrawCashSSDCallMessage9(ejectCard WithdrawCashSSDCallMessage9SendingEnd -> WithdrawCashSSDExecution5StartEnd)
+		ReturnMessage::WithdrawCashSSDCallMessage9Return(WithdrawCashSSDExecution5FinishEnd -> WithdrawCashSSDCallMessage9ReturnReceivingEnd WithdrawCashSSDCallMessage9)
+
+		Execution::WithdrawCashSSDExecution1(WithdrawCashService WithdrawCashSSDExecution1StartEnd WithdrawCashSSDExecution1FinishEnd)
+		Execution::WithdrawCashSSDExecution2(WithdrawCashService WithdrawCashSSDExecution2StartEnd WithdrawCashSSDExecution2FinishEnd)
+		Execution::WithdrawCashSSDExecution3(WithdrawCashService WithdrawCashSSDExecution3StartEnd WithdrawCashSSDExecution3FinishEnd)
+		Execution::WithdrawCashSSDExecution4(WithdrawCashService WithdrawCashSSDExecution4StartEnd WithdrawCashSSDExecution4FinishEnd)
+		Execution::WithdrawCashSSDExecution5(WithdrawCashService WithdrawCashSSDExecution5StartEnd WithdrawCashSSDExecution5FinishEnd)
+
+		MessageEnd::WithdrawCashSSDCallMessage1SendingEnd(Cashier WithdrawCashSSDCallMessage1)
+		ExecutionEnd::WithdrawCashSSDExecution1StartEnd(WithdrawCashService WithdrawCashSSDExecution1)
+		ExecutionEnd::WithdrawCashSSDExecution1FinishEnd(WithdrawCashService WithdrawCashSSDExecution1)
+		MessageEnd::WithdrawCashSSDCallMessage1ReturnReceivingEnd(Cashier WithdrawCashSSDCallMessage1Return)
+		MessageEnd::WithdrawCashSSDCallMessage3SendingEnd(Cashier WithdrawCashSSDCallMessage3)
+		ExecutionEnd::WithdrawCashSSDExecution2StartEnd(WithdrawCashService WithdrawCashSSDExecution2)
+		ExecutionEnd::WithdrawCashSSDExecution2FinishEnd(WithdrawCashService WithdrawCashSSDExecution2)
+		MessageEnd::WithdrawCashSSDCallMessage3ReturnReceivingEnd(Cashier WithdrawCashSSDCallMessage3Return)
+		MessageEnd::WithdrawCashSSDCallMessage5SendingEnd(Cashier WithdrawCashSSDCallMessage5)
+		ExecutionEnd::WithdrawCashSSDExecution3StartEnd(WithdrawCashService WithdrawCashSSDExecution3)
+		ExecutionEnd::WithdrawCashSSDExecution3FinishEnd(WithdrawCashService WithdrawCashSSDExecution3)
+		MessageEnd::WithdrawCashSSDCallMessage5ReturnReceivingEnd(Cashier WithdrawCashSSDCallMessage5Return)
+		MessageEnd::WithdrawCashSSDCallMessage7SendingEnd(Cashier WithdrawCashSSDCallMessage7)
+		ExecutionEnd::WithdrawCashSSDExecution4StartEnd(WithdrawCashService WithdrawCashSSDExecution4)
+		ExecutionEnd::WithdrawCashSSDExecution4FinishEnd(WithdrawCashService WithdrawCashSSDExecution4)
+		MessageEnd::WithdrawCashSSDCallMessage7ReturnReceivingEnd(Cashier WithdrawCashSSDCallMessage7Return)
+		MessageEnd::WithdrawCashSSDCallMessage9SendingEnd(Cashier WithdrawCashSSDCallMessage9)
+		ExecutionEnd::WithdrawCashSSDExecution5StartEnd(WithdrawCashService WithdrawCashSSDExecution5)
+		ExecutionEnd::WithdrawCashSSDExecution5FinishEnd(WithdrawCashService WithdrawCashSSDExecution5)
+		MessageEnd::WithdrawCashSSDCallMessage9ReturnReceivingEnd(Cashier WithdrawCashSSDCallMessage9Return)
+
+	}
+
+	Service ATMSystem {
+
+	}
+
+	Service ThirdPartyServices {
+
+	}
+
+	Service WithdrawCashService {
+
+		[Operation]
+		inputCard(cardID)
+		inputPassword(password)
+		withDraw(amount)
+		printReceipt()
+		ejectCard()
+
+	}
+
+}
+
+DomainModel ATM {
+
+	Entity BandCard {
+		CardID : String
+		Status : CardStatus[NORMAL|SUSPEND|CANNEL]
+		Balance : Real
+		Password : String
+
+		[Refer]
+		BandCardtoUser : User* Aggregation
+	}
+
+	Entity User {
+		UserID : Integer
+		Name : String
+		Address : String
+
+		[Refer]
+		UsertoBandCard : BandCard Association
+	}
+
+}
+
